@@ -23,3 +23,8 @@ dist-ssr
 *.sln
 *.sw?
 src/.env
+
+# Environment files (keep .env.example)
+.env
+.env.*
+!.env.example

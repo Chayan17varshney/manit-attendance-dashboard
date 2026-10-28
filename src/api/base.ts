@@ -1,33 +1,30 @@
 /// <reference types="vite/client" />
-// The above needs to be used in the frontend to access the env related variables 
-// This is the axios instance used for communicating with the backend
-// It is created using the VITE_BACKEND environment variable .We store the sensitive info in the env files 
+// Axios instances for the two backends. URLs and the optional auth token
+// come from environment variables (see .env.example) so nothing
+// environment-specific or secret is committed.
 import axios from 'axios';
-const url=import.meta.env.VITE_BACKEND;
-const authorization=import.meta.env.VITE_AUTHORIZATION;
+
+const DEFAULT_URL = 'http://localhost:3000/';
+
+// AttendanceMain (core API)
+const mainUrl = import.meta.env.VITE_BACKEND || DEFAULT_URL;
+// AttendanceReport2 (report / admin service)
+const reportUrl = import.meta.env.VITE_REPORT_BACKEND || DEFAULT_URL;
+const authorization = import.meta.env.VITE_AUTHORIZATION;
+
 const base = axios.create({
-    baseURL: "http://10.3.1.6:3000/",
+    baseURL: mainUrl,
     headers: {
-        'authorization': "<redacted-before-import>",
+        ...(authorization ? { authorization } : {}),
         'Content-Type': 'application/json',
-        // 'Accept': '*/*',
-        // 'Accept-Encoding': 'gzip, deflate, br',
-        // 'Connection': 'keep-alive'
     }
 });
 
 export const local = axios.create({
-    baseURL: "http://localhost:3000/",
+    baseURL: reportUrl,
     headers: {
-        // 'authorization': "<redacted-before-import>",
         'Content-Type': 'application/json',
-        // 'Accept': '*/*',
-        // 'Accept-Encoding': 'gzip, deflate, br',
-        // 'Connection': 'keep-alive'
     }
 });
-
-
-
 
 export default base;
