@@ -4,19 +4,9 @@ Role-based attendance analytics web app built as a final-year group project at *
 
 **Stack:** React 18 · TypeScript · Vite · React Router · Zustand · Tailwind CSS (+ MUI) · TanStack Table · Recharts · Axios · xlsx / jsPDF · PWA (service worker)
 
-## Team and credits
+## About this repository
 
-This repository continues the team's frontend. The original repository, with its full commit history, is
-**[Yogananda1504/Frontend-ReportGeneration](https://github.com/Yogananda1504/Frontend-ReportGeneration)**.
-
-| Person | Role |
-|---|---|
-| Chayan Varshney | Frontend developer (UI, user flows, API integration). Commits were pushed through team accounts |
-| Yogananda Reddy | Team member, repository owner |
-| Palak Agrawal | Team member |
-| Pranjal Jain | Team member |
-
-The two backend services, `AttendanceMain` and `AttendanceReport2`, were built by the team and live in separate repositories.
+Built as a team project at MANIT. I developed the frontend: UI, user flows and API integration. The two backend services, `AttendanceMain` and `AttendanceReport2`, live in separate repositories.
 
 ## What the app does
 
@@ -41,11 +31,11 @@ npm run dev
 
 Demo login: the login is still **mocked on the client**. `password123` works for any role. See "Known limitations".
 
-## What I added in this fork
+## What I added after the project
 
 | Change | Why |
 |---|---|
-| Imported the snapshot with secrets and personal data removed | The original hardcoded a JWT, and it contained real staff and student details |
+| Removed secrets and personal data from the codebase | It had a hardcoded JWT and real staff and student details |
 | Declared `lodash` and `jspdf` as direct dependencies | Both were imported but only installed through other packages |
 | Fixed case-sensitive `pages/Admin` imports | The build failed on Linux (CI and hosting) |
 | Moved API URLs and the token into environment variables (`.env.example`) | No environment details or secrets in source |
@@ -55,7 +45,7 @@ Demo login: the login is still **mocked on the client**. `password123` works for
 | Added GitHub Actions CI on Linux: lint of the maintained files, tests and build | Every push is checked, including case-sensitive imports |
 
 Planned next:
-- Widen linting beyond the files maintained in this fork.
+- Widen linting beyond the files maintained so far.
 - Merge the duplicated HOD and Director components.
 
 ## Known limitations (inherited, being worked on)
