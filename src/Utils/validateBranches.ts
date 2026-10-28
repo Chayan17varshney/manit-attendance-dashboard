@@ -22,24 +22,22 @@ export function validateBranches(data: Branch[], existingBranches: Branch[]): Pa
             };
         }
 
-        // Check for duplicates in current data
-        const isDuplicate = data.findIndex(
-            (d, i) => i !== index && d.shortForm === branch.shortForm
-        ) !== -1;
-
-        // Check against existing branches
+        // Already in the department: reject every copy.
         const exists = existingBranches.some(
             b => b.shortForm === branch.shortForm
         );
+        if (exists) {
+            return { ...branch, status: 'invalid' as const, error: 'Branch already exists' };
+        }
 
-        let status: 'valid' | 'invalid' | 'duplicate' = 'valid';
-        if (isDuplicate) status = 'duplicate';
-        if (exists) status = 'invalid';
+        // Repeated within the file: keep the first copy, flag the later ones.
+        const isDuplicate = data.findIndex(
+            d => d.shortForm === branch.shortForm
+        ) < index;
+        if (isDuplicate) {
+            return { ...branch, status: 'duplicate' as const, error: 'Duplicate branch code' };
+        }
 
-        return {
-            ...branch,
-            status,
-            error: isDuplicate ? 'Duplicate branch code' : exists ? 'Branch already exists' : undefined
-        };
+        return { ...branch, status: 'valid' as const };
     });
 }

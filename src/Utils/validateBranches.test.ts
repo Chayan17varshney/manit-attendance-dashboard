@@ -34,4 +34,16 @@ describe('validateBranches', () => {
         const [result] = validateBranches([row('MECH', { duration: 2 })], []);
         expect(result).toMatchObject({ shortForm: 'MECH', duration: 2, status: 'valid' });
     });
+    it('gives a row that is both duplicated and already existing a matching status and error', () => {
+        const result = validateBranches([row('CSE'), row('CSE')], [row('CSE')]);
+        for (const r of result) {
+            expect(r).toMatchObject({ status: 'invalid', error: 'Branch already exists' });
+        }
+    });
+
+    it('keeps the first copy of a code repeated in the file and flags only the later copies', () => {
+        const result = validateBranches([row('CSE'), row('ECE'), row('CSE'), row('CSE')], []);
+        expect(result.map(r => r.status)).toEqual(['valid', 'valid', 'duplicate', 'duplicate']);
+        expect(result[2].error).toBe('Duplicate branch code');
+    });
 });
