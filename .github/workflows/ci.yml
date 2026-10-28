@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      # The inherited codebase has ~175 lint errors, so lint covers the files
+      # added or rewritten in this fork; widen the list as files are cleaned up.
+      - name: Lint (maintained files)
+        run: npm run lint:maintained
+
+      - run: npm test
+
+      # Runs on Linux, so case-sensitive import mistakes fail here.
+      - run: npm run build

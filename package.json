@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "lint:maintained": "eslint src/components/auth src/hooks src/test src/api/base.ts src/Utils/validateBranches.ts src/Utils/validateBranches.test.ts src/Utils/classOptions.ts src/Utils/classOptions.test.ts src/Utils/ExportExcel.tsx src/Utils/ExportExcel.test.ts src/components/faculty/InputSection.test.tsx vitest.config.ts"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
