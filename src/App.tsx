@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import Login from './pages/auth/Login';
-import { useAuth } from './hooks/useAuth';
+import ProtectedRoute from './components/auth/ProtectedRoute';
 import Dashboard from './pages/Director/dashboard/Dashboard';
 import { ToastContainer } from 'react-toastify';
 import Landing from './pages/Landing';
@@ -23,24 +23,6 @@ import ReportsPage from './pages/admin/reports/ReportsPage';
 import UsersPage from './pages/admin/users/UsersPage';
 import SettingsPage from './pages/admin/settings/SettingsPage';
 import ApprovalsPage from './pages/admin/approvals/ApprovalsPage';
-
-// The Protected Route component is used to restrict access to certain routes based on the user's role
-// It takes the allowedRoles prop which is an array of roles that are allowed to access the route
-// If the user is not authenticated, they are redirected to the login page
-
-function ProtectedRoute({ children, allowedRoles }: { children: React.ReactNode; allowedRoles: string[] }) {
-  const { user, isAuthenticated } = useAuth();
-
-  if (!isAuthenticated || !user) {
-    return <Navigate to="/login" replace />;
-  }
-
-  if (!allowedRoles.includes(user.role)) {
-    return <Navigate to="/unauthorized" replace />;
-  }
-
-  return <>{children}</>;
-}
 
 function App() {
   const [toastPosition, setToastPosition] = useState(
