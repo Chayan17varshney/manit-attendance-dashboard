@@ -28,3 +28,4 @@ src/.env
 .env
 .env.*
 !.env.example
+coverage
