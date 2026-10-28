@@ -2,18 +2,7 @@ import React, { useState, useRef } from 'react';
 import { toast } from 'react-toastify';
 import { addBranch } from '../../../../../api/services/admin';
 import * as XLSX from 'xlsx';
-
-interface Branch {
-    program: string;
-    course: string;
-    shortForm: string;
-    duration: number;
-}
-
-interface ParsedBranch extends Branch {
-    status: 'valid' | 'invalid' | 'duplicate';
-    error?: string;
-}
+import { validateBranches, type Branch, type ParsedBranch } from '../../../../../Utils/validateBranches';
 
 interface UploadedFile {
     id: string;
@@ -227,37 +216,7 @@ const BranchBulkImportModal: React.FC<BranchBulkImportModalProps> = ({
     };
 
     const validateData = (data: Branch[]) => {
-        const validated = data.map((branch, index) => {
-            if (!branch.program || !branch.course || !branch.shortForm) {
-                return {
-                    ...branch,
-                    status: 'invalid' as const,
-                    error: 'Missing required fields'
-                };
-            }
-
-            // Check for duplicates in current data
-            const isDuplicate = data.findIndex(
-                (d, i) => i !== index && d.shortForm === branch.shortForm
-            ) !== -1;
-
-            // Check against existing branches
-            const exists = existingBranches.some(
-                b => b.shortForm === branch.shortForm
-            );
-
-            let status: 'valid' | 'invalid' | 'duplicate' = 'valid';
-            if (isDuplicate) status = 'duplicate';
-            if (exists) status = 'invalid';
-
-            return {
-                ...branch,
-                status,
-                error: isDuplicate ? 'Duplicate branch code' : exists ? 'Branch already exists' : undefined
-            };
-        });
-
-        setParsedBranches(validated);
+        setParsedBranches(validateBranches(data, existingBranches));
     };
 
     const handleSubmit = async () => {
