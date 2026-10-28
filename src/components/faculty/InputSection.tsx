@@ -8,14 +8,9 @@ import { Calendar, FileText, Archive, ChevronDown, ChevronUp, Loader2 } from 'lu
 import { toast } from 'react-toastify';
 import { getTimetable } from '../../api/services/Faculty';
 import ClassFields from './ClassFields';
+import { getSemesterOptions, getBranchOptions, getSectionOptions, getSubjectOptions, type SubjectOption } from '../../Utils/classOptions';
 
 type TabType = 'timetable' | 'selfReport' | 'class';
-
-// Add interface for subject option
-interface SubjectOption {
-    id: string;
-    name: string;
-}
 
 interface InputSectionProps {
     onTimetableSubmit?: (data: any) => void;
@@ -138,11 +133,7 @@ const InputSection = ({ onTimetableSubmit, onSelfReportSubmit, onClassSubmit, on
             setSelectedSemester('');
             return;
         }
-        const semesters = new Set<string>();
-        classSessions.forEach((item: any) => {
-            if (item.semester) semesters.add(item.semester);
-        });
-        setClassSemesterOptions([...semesters]);
+        setClassSemesterOptions(getSemesterOptions(classSessions));
         setSelectedSemester('');
     }, [classSessions]);
 
@@ -157,12 +148,7 @@ const InputSection = ({ onTimetableSubmit, onSelfReportSubmit, onClassSubmit, on
             setSelectedSubject('');
             return;
         }
-        const filtered = classSessions.filter((s) => s.semester === selectedSemester);
-        const branches = new Set<string>();
-        filtered.forEach((f: any) => {
-            if (f.branch) branches.add(f.branch);
-        });
-        setClassBranchOptions([...branches]);
+        setClassBranchOptions(getBranchOptions(classSessions, selectedSemester));
         setSelectedBranch('');
         setClassSectionOptions([]);
         setSelectedSection('');
@@ -179,14 +165,7 @@ const InputSection = ({ onTimetableSubmit, onSelfReportSubmit, onClassSubmit, on
             setSelectedSubject('');
             return;
         }
-        const filtered = classSessions.filter(
-            (s) => s.semester === selectedSemester && s.branch === selectedBranch
-        );
-        const sections = new Set<string>();
-        filtered.forEach((f: any) => {
-            if (f.section) sections.add(f.section);
-        });
-        setClassSectionOptions([...sections]);
+        setClassSectionOptions(getSectionOptions(classSessions, selectedSemester, selectedBranch));
         setSelectedSection('');
         setClassSubjectOptions([]);
         setSelectedSubject('');
@@ -199,26 +178,7 @@ const InputSection = ({ onTimetableSubmit, onSelfReportSubmit, onClassSubmit, on
             setSelectedSubject('');
             return;
         }
-        const filtered = classSessions.filter(
-            (s) =>
-                s.semester === selectedSemester &&
-                s.branch === selectedBranch &&
-                s.section === selectedSection
-        );
-
-        // Use Map to prevent duplicates with the same ID
-        const subjectsMap = new Map<string, SubjectOption>();
-
-        filtered.forEach((f: any) => {
-            if (f.subject?._id && f.subject?.subjectName) {
-                subjectsMap.set(f.subject._id, {
-                    id: f.subject._id,
-                    name: f.subject.subjectName
-                });
-            }
-        });
-
-        setClassSubjectOptions(Array.from(subjectsMap.values()));
+        setClassSubjectOptions(getSubjectOptions(classSessions, selectedSemester, selectedBranch, selectedSection));
         setSelectedSubject('');
     }, [selectedSection, selectedBranch, selectedSemester, classSessions]);
 
