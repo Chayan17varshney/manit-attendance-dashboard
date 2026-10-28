@@ -10,14 +10,14 @@ interface AuthStore extends AuthState {
 	logout: () => void;
 }
 
-const demoUsers = {
+const demoUsers: Record<UserRole, User> = {
 	FACULTY: {
 		id: "1",
 		email: "faculty@manit.ac.in",
 		role: "FACULTY" as UserRole,
 		name: "Ramesh Kumar Thakur",
 	},
-	HOD: {
+	HOD_CSE: {
 		id: "2",
 		email: "hod.demo@example.edu",
 		role: "HOD_CSE" as UserRole,
