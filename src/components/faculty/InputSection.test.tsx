@@ -45,3 +45,24 @@ describe('faculty InputSection class selectors', () => {
         expect(optionTexts(branch)).toEqual(['Select Branch', 'CSE']);
     });
 });
+
+describe('faculty InputSection submit errors', () => {
+    it('shows an error toast and re-enables Submit when the submit handler fails', async () => {
+        const { toast } = await import('react-toastify');
+        const update = vi.spyOn(toast, 'update');
+        vi.spyOn(console, 'error').mockImplementation(() => {});
+        const user = userEvent.setup();
+        const onTimetableSubmit = vi.fn().mockRejectedValue(new Error('network down'));
+
+        render(<InputSection empCode="E001" onTimetableSubmit={onTimetableSubmit} />);
+        await user.click(screen.getByRole('button', { name: /submit/i }));
+
+        await waitFor(() =>
+            expect(update).toHaveBeenCalledWith(
+                expect.anything(),
+                expect.objectContaining({ type: 'error', isLoading: false })
+            )
+        );
+        expect(screen.getByRole('button', { name: /submit/i })).toBeEnabled();
+    });
+});

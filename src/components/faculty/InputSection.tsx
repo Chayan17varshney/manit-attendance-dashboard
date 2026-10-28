@@ -73,16 +73,17 @@ const InputSection = ({ onTimetableSubmit, onSelfReportSubmit, onClassSubmit, on
             return;
         }
 
-        try {
-            // Use info type for blue background during loading
-            const toastId = toast.loading(`Processing ${selectedTab} data...`, {
-                position: window.innerWidth < 768 ? "bottom-center" : "top-right",
-                // Apply custom styling for blue background
-                className: 'bg-blue-600 text-white',
-                // Setting the type to info for blue styling when using theme="colored"
-                type: "info",
-            });
+        // Created outside try so the catch block can update the same toast.
+        // Use info type for blue background during loading
+        const toastId = toast.loading(`Processing ${selectedTab} data...`, {
+            position: window.innerWidth < 768 ? "bottom-center" : "top-right",
+            // Apply custom styling for blue background
+            className: 'bg-blue-600 text-white',
+            // Setting the type to info for blue styling when using theme="colored"
+            type: "info",
+        });
 
+        try {
             if (selectedTab === 'timetable') {
                 await onTimetableSubmit?.(empCode);
                 showToast(toastId, "Timetable data processed successfully!", "success");
